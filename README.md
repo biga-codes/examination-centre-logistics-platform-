@@ -25,7 +25,9 @@ Automated examination centre operations platform with real-time candidate verifi
 
 ## Candidate Detail Registration and Upload to backend Database with various ID choices for upload
 <img width="1851" height="873" alt="Screenshot 2026-03-02 224229" src="https://github.com/user-attachments/assets/7f154f53-38e3-4bdf-89e2-f09800b5a241" />
+
 ## Webcamera Image Capture
+
 <img width="1670" height="981" alt="image" src="https://github.com/user-attachments/assets/a83228ea-bb3b-4199-9ee9-69d3ba0559b7" />
 
 ## Hallway Ticket & Candidate ID generation:
