@@ -7,12 +7,16 @@ Automated examination centre operations platform with real-time candidate verifi
 ## Website Implementation:
 #Home Page
 <img width="1903" height="919" alt="Screenshot 2026-03-02 224342" src="https://github.com/user-attachments/assets/24594e33-bcfb-4985-b437-d3ff3f2f0ed1" />
-# Candidate Face Verification/Live web camera capture/ OCR and ID verification kiosk + Computer vision pipeline
+## Candidate Face Verification/Live web camera capture/ OCR and ID verification kiosk + Computer vision pipeline
 <img width="1789" height="893" alt="Screenshot 2026-03-02 224300" src="https://github.com/user-attachments/assets/9f26aadd-626e-4f40-88fd-d9c5317055fb" />
-#Candidate Detail Registration and Upload to backend Database with various ID choices for upload
+##Candidate Detail Registration and Upload to backend Database with various ID choices for upload
 <img width="1851" height="873" alt="Screenshot 2026-03-02 224229" src="https://github.com/user-attachments/assets/7f154f53-38e3-4bdf-89e2-f09800b5a241" />
-#Webcamera Image Capture
+##Webcamera Image Capture
 <img width="1670" height="981" alt="image" src="https://github.com/user-attachments/assets/a83228ea-bb3b-4199-9ee9-69d3ba0559b7" />
+##Hallway Ticket & Candidate ID generation:
+
+<img width="1888" height="982" alt="Screenshot 2026-03-02 225247" src="https://github.com/user-attachments/assets/cb799fa5-97d5-49d6-a672-35980edf8805" />
+<img width="1786" height="999" alt="Screenshot 2026-03-02 225258" src="https://github.com/user-attachments/assets/e5cc7677-5d08-4bd9-b968-4f740967d6b4" />
 
 
 
