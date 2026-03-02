@@ -24,6 +24,11 @@ with engine.begin() as conn:
             uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP
         ) """))
     
+    conn.execute(text("""ALTER TABLE users ADD COLUMN name TEXT;
+"""))
+    conn.execute(text("""ALTER TABLE users ADD COLUMN gmail TEXT;
+"""))
+    
     # Insert a default test user and a batch of Aadhaar users (INSERT OR IGNORE to be idempotent)
     conn.execute(text("""
         INSERT OR IGNORE INTO users (user_id, id_type, id_value) VALUES

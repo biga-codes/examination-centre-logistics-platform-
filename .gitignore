@@ -7,7 +7,7 @@ venv/
 
 trial.png
 
-website/scripts/
+website/scripts/*
 # Ignore all candidate uploads (photos, halltickets, etc.)
 website/uploads/
 website/uploads/*

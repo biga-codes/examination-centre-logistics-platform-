@@ -1,0 +1,54 @@
+</script>
+
+<!-- Particle background -->
+<script>
+  const bgCanvas = document.getElementById('bg-canvas');
+  const bgCtx = bgCanvas.getContext('2d');
+  let bgW, bgH, bgParticles;
+  const BG_COUNT = 110, BG_DIST = 145;
+  let bgMouse = { x: -9999, y: -9999 };
+
+  function bgResize() { bgW = bgCanvas.width = window.innerWidth; bgH = bgCanvas.height = window.innerHeight; }
+  function bgRand(a, b) { return a + Math.random() * (b - a); }
+  function bgInit() {
+    bgResize();
+    bgParticles = Array.from({ length: BG_COUNT }, () => ({
+      x: bgRand(0, bgW), y: bgRand(0, bgH),
+      vx: bgRand(-0.25, 0.25), vy: bgRand(-0.25, 0.25),
+      r: bgRand(1.2, 2.5), alpha: bgRand(0.45, 0.85)
+    }));
+  }
+  window.addEventListener('mousemove', e => { bgMouse.x = e.clientX; bgMouse.y = e.clientY; });
+  window.addEventListener('resize', bgInit);
+
+  function bgDraw() {
+    bgCtx.clearRect(0, 0, bgW, bgH);
+    for (const p of bgParticles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = bgW; if (p.x > bgW) p.x = 0;
+      if (p.y < 0) p.y = bgH; if (p.y > bgH) p.y = 0;
+    }
+    for (let i = 0; i < bgParticles.length; i++) {
+      for (let j = i + 1; j < bgParticles.length; j++) {
+        const a = bgParticles[i], b = bgParticles[j];
+        const dx = a.x-b.x, dy = a.y-b.y, d = Math.sqrt(dx*dx+dy*dy);
+        if (d < BG_DIST) {
+          bgCtx.beginPath(); bgCtx.moveTo(a.x,a.y); bgCtx.lineTo(b.x,b.y);
+          bgCtx.strokeStyle=`rgba(80,100,160,${(1-d/BG_DIST)*0.35})`; bgCtx.lineWidth=0.7; bgCtx.stroke();
+        }
+      }
+      const p = bgParticles[i];
+      const dx = p.x-bgMouse.x, dy = p.y-bgMouse.y, d = Math.sqrt(dx*dx+dy*dy);
+      if (d < 160) {
+        bgCtx.beginPath(); bgCtx.moveTo(p.x,p.y); bgCtx.lineTo(bgMouse.x,bgMouse.y);
+        bgCtx.strokeStyle=`rgba(80,100,180,${(1-d/160)*0.5})`; bgCtx.lineWidth=0.6; bgCtx.stroke();
+      }
+    }
+    for (const p of bgParticles) {
+      bgCtx.beginPath(); bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      bgCtx.fillStyle=`rgba(80,100,160,${p.alpha*0.65})`; bgCtx.fill();
+    }
+    requestAnimationFrame(bgDraw);
+  }
+  bgInit(); bgDraw();
+</script>
