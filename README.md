@@ -4,6 +4,18 @@
 
 Automated examination centre operations platform with real-time candidate verification, aadhar/pan/hall-ticket OCR processing, live facial biometric capture, and comprehensive audit trails. Combines computer vision preprocessing, deep learning face matching, fuzzy similarity algorithms, and centralized dashboards for efficient, fraud/impersonation proof setup, This project eliminates the time-consuming manual verification processes and reduces impersonation fraud through biometric validation.
 
+## Website Implementation:
+#Home Page
+<img width="1903" height="919" alt="Screenshot 2026-03-02 224342" src="https://github.com/user-attachments/assets/24594e33-bcfb-4985-b437-d3ff3f2f0ed1" />
+# Candidate Face Verification/Live web camera capture/ OCR and ID verification kiosk + Computer vision pipeline
+<img width="1789" height="893" alt="Screenshot 2026-03-02 224300" src="https://github.com/user-attachments/assets/9f26aadd-626e-4f40-88fd-d9c5317055fb" />
+#Candidate Detail Registration and Upload to backend Database with various ID choices for upload
+<img width="1851" height="873" alt="Screenshot 2026-03-02 224229" src="https://github.com/user-attachments/assets/7f154f53-38e3-4bdf-89e2-f09800b5a241" />
+#Webcamera Image Capture
+<img width="1670" height="981" alt="image" src="https://github.com/user-attachments/assets/a83228ea-bb3b-4199-9ee9-69d3ba0559b7" />
+
+
+
 ## 🎯 Purpose
 
 Traditional examination centre entry procedures involve extensive manual checks of identity documents and hall tickets, leading to:
@@ -23,6 +35,7 @@ Traditional examination centre entry procedures involve extensive manual checks 
 - **⚡ Fast Processing**: Reduces verification time from minutes to seconds per candidate
 - **🎯 Fuzzy Matching**: Handles OCR errors using similarity metrics (RapidFuzz/Levenshtein) for robust text matching
 
+ 
 ## 🏗️ System Architecture
 
 The system follows a multi-stage verification pipeline:
