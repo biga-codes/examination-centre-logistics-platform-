@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Register Candidate</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      background: #e8e4de;
+    }
+    body::after {
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(180,170,155,0.3) 100%);
+    }
+    #bg-canvas { opacity: 0.22; }
+
+    .container {
+      background: rgba(255, 255, 255, 0.759);
+      backdrop-filter: blur(52px) saturate(180%);
+      -webkit-backdrop-filter: blur(52px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.10),
+                  0 0 0 1px rgba(255,255,255,0.55) inset,
+                  0 1px 0 rgba(255,255,255,0.85) inset;
+      color: #111;
+    }
+
+    .system-label { color: #666; }
+    h1 { color: #111; }
+    h1 .dim { color: #666; }
+    h3 { color: #444; }
+
+    input {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.13);
+      color: #111;
+      backdrop-filter: blur(8px);
+    }
+    input::placeholder { color: #999; }
+    input:focus {
+      border-color: #3a6fd8;
+      background: rgba(255,255,255,0.7);
+    }
+
+    .section-label { color: #666; }
+    .divider { border-top: 1px solid rgba(0,0,0,0.10); }
+
+    .flash-msg { color: #2a52b0; background: rgba(58,111,216,0.07); border-color: rgba(58,111,216,0.2); }
+    .flash-msg-success { color: #166534; background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+    .flash-msg-error { color: #991b1b; background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.2); }
+
+    button.btn-cam {
+      background: rgba(58,111,216,0.08); color: #1e40af; border-color: rgba(58,111,216,0.25);
+    }
+    button.btn-cam:hover {
+      background: rgba(58,111,216,0.15); border-color: rgba(58,111,216,0.45); color: #1e3a8a;
+      box-shadow: none; transform: translateY(-1px);
+    }
+    button.btn-upload {
+      background: rgba(255,255,255,0.35); color: #444; border-color: rgba(0,0,0,0.13);
+    }
+    button.btn-upload:hover {
+      background: rgba(255,255,255,0.55); border-color: rgba(0,0,0,0.22); color: #111; box-shadow: none;
+    }
+    button.btn-ghost {
+      background: rgba(255,255,255,0.3); color: #555; border-color: rgba(0,0,0,0.12); box-shadow: none;
+    }
+    button.btn-ghost:hover {
+      background: rgba(255,255,255,0.5); color: #111; border-color: rgba(0,0,0,0.2); box-shadow: none;
+    }
+
+    #menuBtn {
+      background: rgba(232,228,222,0.75);
+      backdrop-filter: blur(16px);
+      color: #333; border-color: rgba(0,0,0,0.14);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+    #menuBtn:hover { color: #111; border-color: rgba(0,0,0,0.25); background: rgba(232,228,222,0.85); box-shadow: none; transform: none; }
+
+    .menu-drop { background: rgba(240,237,232,0.92); border-color: rgba(0,0,0,0.11); }
+    .menu-drop a { color: #333 !important; }
+    .menu-drop a:hover { background: rgba(58,111,216,0.08); color: #111 !important; }
+
+    /* ── ID type selector ── */
+    .id-type-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    .id-type-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 14px 8px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      background: rgba(255, 255, 255, 0.35);
+      color: #555;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.18s;
+      width: 100%;
+      height: auto;
+      box-shadow: none;
+      margin: 0;
+    }
+    .id-type-btn svg { opacity: 0.6; transition: opacity 0.18s; }
+    .id-type-btn:hover {
+      background: rgba(255,255,255,0.6);
+      border-color: rgba(58,111,216,0.35);
+      color: #1e40af;
+      transform: translateY(-1px);
+      box-shadow: none;
+    }
+    .id-type-btn:hover svg { opacity: 0.9; }
+    .id-type-btn.active {
+      background: rgba(58,111,216,0.10);
+      border-color: #3a6fd8;
+      color: #1e40af;
+      box-shadow: 0 0 0 3px rgba(58,111,216,0.12);
+    }
+    .id-type-btn.active svg { opacity: 1; }
+
+    .id-input-wrap { width: 100%; }
+    .id-input-wrap input { margin-bottom: 0; }
+
+    /* Image preview */
+    .preview-box {
+      width: 100%; aspect-ratio: 4/3;
+      border-radius: 8px; overflow: hidden;
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.09);
+      display: none; margin-bottom: 10px;
+    }
+    .preview-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Webcam modal */
+    #camModal {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0, 0, 0, 0.4);
+      align-items: center; justify-content: center;
+    }
+    #camModal.open { display: flex; }
+    .cam-modal-inner {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 16px; padding: 28px;
+      width: 380px; display: flex; flex-direction: column;
+      align-items: center; gap: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+    .cam-modal-inner video { width: 100%; border-radius: 8px; background: #000; }
+    .cam-modal-title {
+      font-family: 'DM Mono', monospace; font-size: 13px;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #666;
+    }
+    .cam-btns { display: flex; gap: 10px; width: 100%; }
+    .cam-btns button { margin: 0; }
+  </style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<div class="right-menu">
+  <button id="menuBtn">menu</button>
+  <div id="menuDrop" class="menu-drop" style="display:none;">
+    <a href="/">Home</a>
+    <a href="/report">Report</a>
+  </div>
+</div>
+
+<!-- Webcam Modal -->
+<div id="camModal">
+  <div class="cam-modal-inner">
+    <p class="cam-modal-title" id="camModalLabel">capture photo</p>
+    <video id="camVideo" autoplay playsinline></video>
+    <div class="cam-btns">
+      <button id="camSnapBtn" style="flex:1;">Capture</button>
+      <button id="camCancelBtn" class="btn-ghost" style="flex:1;">Cancel</button>
+    </div>
+  </div>
+</div>
+<canvas id="snapCanvas" style="display:none;"></canvas>
+
+<div class="container" style="max-width:520px; margin: 60px auto;">
+  <p class="system-label">exam verification system</p>
+  <h1>Candidate <span class="dim">Registration</span></h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in messages %}
+    <div class="flash-msg{% if cat == 'success' %}-success{% elif cat == 'error' %} flash-msg-error{% endif %}">
+      {{ msg }}
+    </div>
+    {% if cat == 'success' and registered_cid %}
+    <a href="/hallticket/{{ registered_cid }}" target="_blank" style="width:100%; display:block; text-decoration:none;">
+      <button type="button" style="
+        width:100%;
+        background: #1a3c8f;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 4px;
+      ">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="13" y2="17"/>
+        </svg>
+        Download Hall Ticket PDF
+      </button>
+    </a>
+    {% endif %}
+  {% endfor %}
+{% endwith %}
+
+  <form id="regForm" action="/register" method="POST" enctype="multipart/form-data" style="width:100%;">
+
+    <h3>Candidate Info</h3>
+    <input type="text"  name="candidate_name" placeholder="Full name" required>
+    <input type="email" name="gmail"           placeholder="Gmail address" required>
+
+    <div class="divider"></div>
+
+    <!-- ID type selector -->
+    <p class="section-label">ID Type</p>
+    <div class="id-type-group">
+
+      <button type="button" class="id-type-btn active" data-type="aadhaar" id="btn-aadhaar">
+        <!-- Fingerprint / ID card icon -->
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <circle cx="8.5" cy="12" r="2.5"/>
+          <line x1="13" y1="9" x2="20" y2="9"/>
+          <line x1="13" y1="12" x2="20" y2="12"/>
+          <line x1="13" y1="15" x2="17" y2="15"/>
+        </svg>
+        Aadhaar
+      </button>
+
+      <button type="button" class="id-type-btn" data-type="pan" id="btn-pan">
+        <!-- Card with text lines icon -->
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <line x1="6"  y1="10" x2="18" y2="10"/>
+          <line x1="6"  y1="14" x2="12" y2="14"/>
+          <rect x="6" y="7" width="5" height="2" rx="0.5" fill="currentColor" stroke="none" opacity="0.4"/>
+        </svg>
+        PAN
+      </button>
+
+      <button type="button" class="id-type-btn" data-type="election_id" id="btn-election">
+        <!-- Ballot / checkmark icon -->
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        Voter ID
+      </button>
+
+    </div>
+
+    <!-- Dynamic ID input -->
+    <div class="id-input-wrap" style="margin-bottom:16px;">
+      <input type="text" name="id_value" id="idValueInput"
+             placeholder="Enter Aadhaar number (12 digits)"
+             pattern="\d{12}" maxlength="12" required>
+    </div>
+    <input type="hidden" name="id_type" id="idTypeHidden" value="aadhaar">
+
+    <div class="divider"></div>
+
+    <!-- OCR photo -->
+    <p class="section-label">ID / OCR Photo</p>
+    <div id="ocrPreviewBox" class="preview-box">
+      <img id="ocrPreviewImg" src="" alt="OCR preview">
+    </div>
+    <div class="face-btn-group">
+      <button type="button" class="btn-cam" id="ocrCamBtn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        Use Webcam
+      </button>
+      <button type="button" class="btn-upload" id="ocrUploadBtn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+        </svg>
+        Upload File
+      </button>
+    </div>
+    <input type="file"   name="ocr_file"   id="ocrFileInput"  accept="image/*" style="display:none;">
+    <input type="hidden" name="ocr_webcam" id="ocrWebcamData">
+
+    <div class="divider"></div>
+
+    <!-- Face photo -->
+    <p class="section-label">Face Reference Photo</p>
+    <div id="facePreviewBox" class="preview-box">
+      <img id="facePreviewImg" src="" alt="Face preview">
+    </div>
+    <div class="face-btn-group">
+      <button type="button" class="btn-cam" id="faceCamBtn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        Use Webcam
+      </button>
+      <button type="button" class="btn-upload" id="faceUploadBtn">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+        </svg>
+        Upload File
+      </button>
+    </div>
+    <input type="file"   name="face_file"   id="faceFileInput" accept="image/*" style="display:none;">
+    <input type="hidden" name="face_webcam" id="faceWebcamData">
+
+    <div class="divider"></div>
+
+    <button type="submit">Register Candidate</button>
+    <button type="button" class="btn-ghost" onclick="window.location='/'">Cancel</button>
+  </form>
+</div>
+
+<script>
+  /* ── Menu ── */
+  document.getElementById('menuBtn').addEventListener('click', function(e){
+    var d = document.getElementById('menuDrop');
+    d.style.display = d.style.display === 'block' ? 'none' : 'block';
+    e.stopPropagation();
+  });
+  window.addEventListener('click', function(e){
+    if (!e.target.matches('#menuBtn')) {
+      var d = document.getElementById('menuDrop');
+      if (d) d.style.display = 'none';
+    }
+  });
+
+  /* ── ID type selector ── */
+  const idMeta = {
+    aadhaar:     { label: 'Enter Aadhaar number (12 digits)', pattern: '\\d{12}', maxlen: '12',  inputmode: 'numeric' },
+    pan:         { label: 'Enter PAN number (e.g. ABCDE1234F)', pattern: '[A-Z]{5}[0-9]{4}[A-Z]{1}', maxlen: '10', inputmode: 'text' },
+    election_id: { label: 'Enter Voter ID (e.g. ABC1234567)', pattern: '[A-Z]{3}[0-9]{7}', maxlen: '10', inputmode: 'text' },
+  };
+
+  const idValueInput  = document.getElementById('idValueInput');
+  const idTypeHidden  = document.getElementById('idTypeHidden');
+  const idTypeBtns    = document.querySelectorAll('.id-type-btn');
+
+  idTypeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      idTypeBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const type = this.dataset.type;
+      idTypeHidden.value = type;
+      const meta = idMeta[type];
+      idValueInput.placeholder = meta.label;
+      idValueInput.pattern     = meta.pattern;
+      idValueInput.maxLength   = meta.maxlen;
+      idValueInput.inputMode   = meta.inputmode;
+      idValueInput.value       = '';
+      idValueInput.focus();
+    });
+  });
+
+  /* ── Webcam ── */
+  let camStream = null, activeCamTarget = null;
+  const camModal     = document.getElementById('camModal');
+  const camVideo     = document.getElementById('camVideo');
+  const camSnapBtn   = document.getElementById('camSnapBtn');
+  const camCancelBtn = document.getElementById('camCancelBtn');
+  const snapCanvas   = document.getElementById('snapCanvas');
+
+  function openCam(target) {
+    activeCamTarget = target;
+    document.getElementById('camModalLabel').textContent =
+      target === 'ocr' ? 'capture id / ocr photo' : 'capture face photo';
+    camModal.classList.add('open');
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+      .then(s => { camStream = s; camVideo.srcObject = s; })
+      .catch(err => { alert('Camera error: ' + err.message); closeCam(); });
+  }
+
+  function closeCam() {
+    if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; }
+    camModal.classList.remove('open');
+    activeCamTarget = null;
+  }
+
+  camSnapBtn.addEventListener('click', function() {
+    snapCanvas.width  = camVideo.videoWidth;
+    snapCanvas.height = camVideo.videoHeight;
+    snapCanvas.getContext('2d').drawImage(camVideo, 0, 0);
+    const dataURL = snapCanvas.toDataURL('image/jpeg', 0.92);
+    if (activeCamTarget === 'ocr') {
+      document.getElementById('ocrWebcamData').value = dataURL;
+      document.getElementById('ocrPreviewImg').src   = dataURL;
+      document.getElementById('ocrPreviewBox').style.display = 'block';
+      document.getElementById('ocrFileInput').value  = '';
+    } else {
+      document.getElementById('faceWebcamData').value = dataURL;
+      document.getElementById('facePreviewImg').src   = dataURL;
+      document.getElementById('facePreviewBox').style.display = 'block';
+      document.getElementById('faceFileInput').value  = '';
+    }
+    closeCam();
+  });
+  camCancelBtn.addEventListener('click', closeCam);
+
+  document.getElementById('ocrCamBtn').addEventListener('click',    () => openCam('ocr'));
+  document.getElementById('ocrUploadBtn').addEventListener('click',  () => document.getElementById('ocrFileInput').click());
+  document.getElementById('ocrFileInput').addEventListener('change', function() {
+    if (this.files[0]) {
+      document.getElementById('ocrPreviewImg').src = URL.createObjectURL(this.files[0]);
+      document.getElementById('ocrPreviewBox').style.display = 'block';
+      document.getElementById('ocrWebcamData').value = '';
+    }
+  });
+
+  document.getElementById('faceCamBtn').addEventListener('click',    () => openCam('face'));
+  document.getElementById('faceUploadBtn').addEventListener('click',  () => document.getElementById('faceFileInput').click());
+  document.getElementById('faceFileInput').addEventListener('change', function() {
+    if (this.files[0]) {
+      document.getElementById('facePreviewImg').src = URL.createObjectURL(this.files[0]);
+      document.getElementById('facePreviewBox').style.display = 'block';
+      document.getElementById('faceWebcamData').value = '';
+    }
+  });
+</script>
+</body>
+</html>

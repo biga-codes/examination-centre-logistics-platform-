@@ -1,0 +1,12 @@
+flask
+sqlalchemy
+pytesseract
+pillow
+opencv-python
+numpy
+insightface
+onnxruntime
+rapidfuzz
+numpy
+xhtml2pdf
+io
