@@ -19,15 +19,18 @@ from sqlalchemy import create_engine, text
 from rapidfuzz import fuzz
 
 
+
 # =========================
 # 1. ID FORMAT DEFINITIONS
 # =========================
 class IndianIDFormats:
     PATTERNS = {
         "aadhaar": re.compile(r"\b[2-9][0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\b"),
+        "aadhar": re.compile(r"\b[2-9][0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\b"),
         "pan": re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b"),
         "passport": re.compile(r"\b[A-Z][0-9]{7}\b"),
         "voter": re.compile(r"\b[A-Z]{3}[0-9]{7}\b"),
+        "name_pattern": re.compile(r"\b[A-Z][a-z]+\s[A-Z][a-z]*\b"),
         "hallticket": re.compile(r"\b[0-9]{10}\b")
     }
 
@@ -91,7 +94,7 @@ class UserDatabase:
 # =========================
 class IDExtractor:
     def extract_expected_id(self, ocr_text: str, expected_id_type: str):
-        pattern = IndianIDFormats.PATTERNS.get(expected_id_type)
+        pattern = IndianIDFormats.PATTERNS.get(expected_id_type) #error thrown here check
 
         if pattern is None:
             raise ValueError(f"Unsupported ID type: {expected_id_type}")
@@ -102,6 +105,13 @@ class IDExtractor:
 
         # If multiple found, take the longest / cleanest
         return max(matches, key=len)
+    
+    def extract_name(self, ocr_text: str):
+        pattern = IndianIDFormats.PATTERNS.get("name_pattern")
+        # Search the raw text directly to preserve case
+        matches = pattern.findall(ocr_text)
+        
+        return matches[0] if matches else None # Returns the first two Upper-lower words found
 
 
 # =========================
@@ -116,7 +126,7 @@ class IDVerifier:
     def verify(self, image_path: str, user_id: int) -> dict:
         # Step 1: Load DB truth
         db_record = self.db.get_user_id_record(user_id)
-        expected_type = db_record["id_type"].lower()
+        expected_type = db_record["id_type"].lower() #error
         expected_value = IndianIDFormats.normalize(
             db_record["id_value"], expected_type
         )
@@ -128,6 +138,8 @@ class IDVerifier:
         extracted_id = self.extractor.extract_expected_id(
             ocr_text, expected_type
         )
+        #name 
+        ocr_name = self.extractor.extract_name(ocr_text)
 
         if extracted_id is None:
             return {
@@ -143,11 +155,13 @@ class IDVerifier:
         # Step 4: Exact match (STRONG ID)
         match = extracted_id == expected_value
 
+
         return {
             "status": "PASS" if match else "FAIL",
             "expected_id_type": expected_type,
             "db_value": expected_value,
             "ocr_value": extracted_id,
+            "ocr_name": ocr_name,
             "match": match
         }
 

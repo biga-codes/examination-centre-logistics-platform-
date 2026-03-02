@@ -204,7 +204,7 @@ def _run_face_verification(cid: int, live_image_path: str):
 def api_face_attempt():
     cid = int(request.form.get("candidate_id"))
 
-    # ── Determine image source: webcam (base64) or file upload ────────────────
+    # determine image source: webcam (base64) or file upload 
     webcam_data = request.form.get("webcam_image")   # base64 data-URL from JS
     face_file   = request.files.get("face_file")
 
@@ -227,7 +227,7 @@ def api_face_attempt():
         flash("No face image provided (upload or webcam)")
         return redirect(url_for("candidate", cid=cid))
 
-    # ── Run face-only verification 
+    # run face-only verification 
     face_status, similarity, error = _run_face_verification(cid, str(attempt_path))
 
     if error:
@@ -284,7 +284,7 @@ def api_set_status():
 def next_candidate(cid):
     return redirect(url_for("candidate", cid=cid + 1))
 
-# ─ Report ─
+
 
 @app.route("/report")
 def report():
