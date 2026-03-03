@@ -124,7 +124,7 @@ cd mod1
 
 ```bash
 pip install https://github.com/Gourieff/Assets/raw/main/Insightface/insightface-0.7.3-cp313-cp313-win_amd64.whl
-pip install -r website/requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 3. Database Initialization
@@ -132,8 +132,9 @@ pip install -r website/requirements.txt
 Initialize the local SQLite databases from the **root directory** before the first run:
 
 ```bash
-python website/create_db.py
+python website/create_db2.py
 python website/create_verify_db.py
+python website/migrate_verify_db.py
 ```
 
 This creates:
